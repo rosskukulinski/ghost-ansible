@@ -3,6 +3,8 @@ ghost-ansible
 
 Ansible playbooks for deploying the Ghost blogging system
 
+NOTE: This is not meant to be deployed to production.  Rather a starting point to get your own Ghost blog up and running on your own server.
+
 
 Note: [dopy](https://pypi.python.org/pypi/dopy) is required for spinning up the digital ocean instance.
 
@@ -45,4 +47,13 @@ ansible-playbook -i hosts site.yml
 
 ```
 ansible-playbook -i hosts site.yml --tags configure
+```
+
+Your Ghost Blog can be accessed on port-80:
+```
+http://ip_address/
+```
+Admin page can be accessed on /admin/
+```
+http://ip_address/admin/
 ```
