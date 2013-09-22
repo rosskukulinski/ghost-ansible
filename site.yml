@@ -1,0 +1,2 @@
+- include: create_dropplet.yml
+- include: configure_ghost.yml

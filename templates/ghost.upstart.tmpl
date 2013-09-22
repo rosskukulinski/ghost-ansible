@@ -1,0 +1,18 @@
+description 'ghost blog upstart script'
+author 'Ross Kukulinski <ross@kukulinski.com>'
+
+start on (local-filesystems and net-device-up)
+stop on shutdown
+
+# respawn the job up to 10 times within a 20 second period.
+# If the job exceeds these values, it will be stopped and
+# marked as failed.
+respawn
+respawn limit 10 20
+
+chdir /var/opt/ghost-{{ghost_ver}}/
+
+script
+   NODE_ENV=production /usr/bin/nodejs /var/opt/ghost-{{ghost_ver}}/index.js 2>&1 >> /var/log/ghost.log
+end script
+

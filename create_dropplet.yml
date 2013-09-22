@@ -1,0 +1,45 @@
+---
+# Creates Digital Ocean Droplet
+
+  - hosts: localhost
+    connection: local
+    tags: create
+
+    vars_files:
+      - vars.yml
+
+    #vars_prompt:
+    #  droplet_name: "Please enter a name for your droplet"
+    #  region: "Which region? 1: NYC1, 2: Amsterdam, 3: SFO, 4: NYC2"
+
+    tasks:
+
+    - name: 'Create Digital Ocean Droplet'
+      digital_ocean: >
+          state=active
+          command=droplet
+          name={{droplet_name}}
+          client_id={{client_id}}
+          api_key={{api_key}}
+          ssh_key_ids={{ssh_key_id}}
+          size_id=66
+          region_id={{region}}
+          image_id=473123
+          wait_timeout=6000
+          wait=yes
+      register: my_droplet
+
+    - name: 'Droplet information'
+      debug: msg="ID {{ my_droplet.droplet.id }}, name {{ my_droplet.droplet.name }}"
+
+    - name: 'Droplet information2'
+      debug: msg="ip {{ my_droplet.droplet.ip_address }}"
+      
+    - name: 'Pause for 60 seconds'
+      pause: seconds=60
+
+    - name: 'Add newly created droplet to inventory'
+      add_host: name={{ my_droplet.droplet.ip_address }} groups=ghosts
+
+    - name: ensure newly created droplet is in known_hosts
+      known_hosts: host={{ my_droplet.droplet.ip_address }} state=present

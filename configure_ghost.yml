@@ -1,0 +1,41 @@
+  - hosts: ghosts
+    user: root
+    tags: configure
+
+
+    vars_files:
+      - vars.yml
+
+
+    tasks:
+
+      - name: Add python-software-properties
+        apt: pkg=software-properties-common state=present
+
+      - name: Add nodejs ppa
+        apt_repository: repo='ppa:chris-lea/node.js' 
+
+      - name: Install nodejs
+        apt: pkg=nodejs state=present update_cache=yes
+
+      - name: Copy ghost source
+        copy: src=releases/ghost-{{ghost_ver}}.zip dest=/var/opt/
+        register: src_changed
+
+      - name: Extract ghost
+        command: unzip /var/opt/ghost-{{ghost_ver}}.zip -d /var/opt/ghost-{{ghost_ver}}
+        when_changed: $src_changed
+
+      - name: npm Install
+        command: npm install chdir=/var/opt/ghost-{{ghost_ver}}/
+        when_changed: $src_changed
+
+      - name: Copy ghost configuration
+        template: src=templates/config.ghost.tmpl dest=/var/opt/ghost-{{ghost_ver}}/config.js
+
+      - name: Copy upstart file
+        template: src=templates/ghost.upstart.tmpl dest=/etc/init/ghost.conf
+
+      - name: Start ghost blog
+        service: name=ghost state=started
+

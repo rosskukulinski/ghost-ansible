@@ -1,0 +1,21 @@
+## Digital Ocean Configuration Options
+
+# Put your Digital Ocean Client ID and API key here
+client_id: XXXXXX
+api_key: XXXXXX
+
+# You also need to specify which ssh key in Digital Ocean you want to use
+ssh_key_id: XXXXXX
+droplet_name: 'GhostBlog'
+region: 3
+
+## Ghost Configuration Options
+ghost_ver: 0.3.0
+ghost_port: 80
+ghost_url: 'http://{{ ansible_eth0["ipv4"]["address"] }}'
+email: Mailgun
+
+# Insert your Mailgun user account and password information
+email_user: XXXXXX
+email_pass: XXXXXX
+
